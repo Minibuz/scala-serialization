@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "leo_primitive_serialization" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "leo_primitive_serialization" ]
 
 permissions:
   contents: read
