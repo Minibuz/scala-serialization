@@ -87,4 +87,18 @@ class SerializationTest extends AnyFunSuite {
     val str = PseudobinSerde.ARRAY(PseudobinSerde.STRING).deserialize(strForString)
     assert(str == Success(List("A","B"), Input(strForString, 20)))
   }
+
+  test("Serialization and Deserialization for Nullable<String>: None") {
+    val strForNullableNone = PseudobinSerde.NULLABLE(PseudobinSerde.STRING).serialize(None)
+    assert(strForNullableNone == "0")
+    val str = PseudobinSerde.NULLABLE(PseudobinSerde.STRING).deserialize(strForNullableNone)
+    assert(str == Success(None, Input(strForNullableNone, 1)))
+  }
+
+  test("Serialization and Deserialization for Nullable<String>: Some(\"A\")") {
+    val strForNullableSome = PseudobinSerde.NULLABLE(PseudobinSerde.STRING).serialize(Some("A"))
+    assert(strForNullableSome == "1     1A")
+    val str = PseudobinSerde.NULLABLE(PseudobinSerde.STRING).deserialize(strForNullableSome)
+    assert(str == Success(Some("A"), Input(strForNullableSome, 8)))
+  }
 }
