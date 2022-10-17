@@ -101,12 +101,11 @@ object PseudobinSerde:
       val input = data.next(1)
       isPresent match {
         case '0' => Success((None, input))
-        case '1' => {
+        case '1' =>
           for {
             (element: A, newInput: Input) <- itemSerde.deserialize(input)
             result <- Success(Some(element), newInput)
           } yield result
-        }
       }
     }
   }
