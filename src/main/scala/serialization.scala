@@ -97,6 +97,16 @@ object PseudobinSerde:
     }
 
     override def deserialize(data: Input): Maybe[Option[A]] = {
-      ???
+      val isPresent = data.data.charAt(0)
+      val input = data.next(1)
+      isPresent match {
+        case '0' => Success((None, input))
+        case '1' => {
+          for {
+            (element: A, newInput: Input) <- itemSerde.deserialize(input)
+            result <- Success(Some(element), newInput)
+          } yield result
+        }
+      }
     }
   }
