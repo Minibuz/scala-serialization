@@ -80,4 +80,11 @@ class SerializationTest extends AnyFunSuite {
     val str = PseudobinSerde.STRING.deserialize(strForString)
     assert(str == Success("Test", Input(strForString, 10)))
   }
+
+  test("Serialization and Deserialization for List<String>(\"A\",\"B\")") {
+    val strForString = PseudobinSerde.ARRAY(PseudobinSerde.STRING).serialize(List("A","B"))
+    assert(strForString == "     2     1A     1B")
+    val str = PseudobinSerde.ARRAY(PseudobinSerde.STRING).deserialize(strForString)
+    assert(str == Success(List("A","B"), Input(strForString, 20)))
+  }
 }
