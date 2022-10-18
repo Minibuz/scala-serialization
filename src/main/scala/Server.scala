@@ -23,7 +23,18 @@ def launchServer(): Unit = {
   val clientSocket = serverSocket.accept
   val out = new PrintWriter(clientSocket.getOutputStream, true)
   val in = new BufferedReader(InputStreamReader(clientSocket.getInputStream))
-  val greeting = in.readLine
-  if ("hello server" == greeting) out.println("hello client")
-  else out.println("unrecognised greeting")
+
+  val request = in.readLine // Server get the serialized request
+  OperationRequest.serde.deserialize(request) match { // Server - Deserialize request
+    case Success((value: OperationRequest, input: Input)) =>
+      val result = value.operator match {
+        case Operator.ADD => value.a + value.b
+        case Operator.MINUS => value.a - value.b
+        case Operator.MULTIPLY => value.a * value.b
+        case Operator.DIVIDE => value.a / value.b
+      }
+      val response = OperationResponse.serde.serialize(OperationResponse(value.id, Option(result)))
+      out.println(response) // Server send response to Stub
+    case Failure(e) => println(e)
+  }
 }
