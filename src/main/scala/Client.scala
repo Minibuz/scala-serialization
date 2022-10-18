@@ -11,7 +11,7 @@ import java.io.PrintWriter
 import java.net.ServerSocket
 import java.net.Socket
 
-class Stub(clientSocket : Socket, out : PrintWriter, in : BufferedReader) extends OperationService:
+class ClientStub(clientSocket : Socket, out : PrintWriter, in : BufferedReader) extends OperationService:
   override def add(a: Int, b: Int): Option[Int] = {
     val request = OperationRequest.serde.serialize(OperationRequest(operator = Operator.ADD, a = a, b = b)) // Stub - Serializing request
     sendRequest(request)
@@ -44,5 +44,5 @@ def launchClient(): Unit = {
   val out = PrintWriter(clientSocket.getOutputStream, true)
   val in = BufferedReader(InputStreamReader(clientSocket.getInputStream))
 
-  println(Stub(clientSocket, out, in).add(1, 1).get)
+  println(ClientStub(clientSocket, out, in).add(1, 1).get)
 }
