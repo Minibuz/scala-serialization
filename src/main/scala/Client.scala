@@ -13,29 +13,33 @@ import java.net.Socket
 
 class ClientStub(clientSocket : Socket, out : PrintWriter, in : BufferedReader) extends OperationService:
   override def add(a: Int, b: Int): Option[Int] = {
-    val request = OperationRequest.serde.serialize(OperationRequest(operator = Operator.ADD, a = a, b = b)) // Stub - Serializing request
-    sendRequest(request)
+    val request = OperationRequest(operator = Operator.ADD, a = a, b = b)
+    val requestSerialized = OperationRequest.serde.serialize(request) // Stub - Serializing request
+    sendRequest(requestSerialized, request.id)
   }
 
   override def minus(a: Int, b: Int): Option[Int] = {
-    val request = OperationRequest.serde.serialize(OperationRequest(operator = Operator.MINUS, a = a, b = b)) // Stub - Serializing request
-    sendRequest(request)
+    val request = OperationRequest(operator = Operator.MINUS, a = a, b = b)
+    val requestSerialized = OperationRequest.serde.serialize(request) // Stub - Serializing request
+    sendRequest(requestSerialized, request.id)
   }
 
   override def multiply(a: Int, b: Int): Option[Int] = {
-    val request = OperationRequest.serde.serialize(OperationRequest(operator = Operator.MULTIPLY, a = a, b = b)) // Stub - Serializing request
-    sendRequest(request)
+    val request = OperationRequest(operator = Operator.MULTIPLY, a = a, b = b)
+    val requestSerialized = OperationRequest.serde.serialize(request) // Stub - Serializing request
+    sendRequest(requestSerialized, request.id)
   }
   override def divide(a: Int, b: Int): Option[Int] = {
-    val request = OperationRequest.serde.serialize(OperationRequest(operator = Operator.DIVIDE, a = a, b = b)) // Stub - Serializing request
-    sendRequest(request)
+    val request = OperationRequest(operator = Operator.DIVIDE, a = a, b = b)
+    val requestSerialized = OperationRequest.serde.serialize(request) // Stub - Serializing request
+    sendRequest(requestSerialized, request.id)
   }
 
-  def sendRequest(request : String): Option[Int] = {
+  def sendRequest(request : String, id : String): Option[Int] = {
     out.println(request) // Stub - Sending request to server
     val resp = in.readLine() // Response from server
     val response = OperationResponse.serde.deserialize(resp)
-    response.get._1.result
+    if (response.get._1.id == id) response.get._1.result else Option.empty
   }
 
 @main
