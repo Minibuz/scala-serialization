@@ -1,6 +1,10 @@
+import scala.util.{Failure, Success, Try}
+
 @main
 def main(): Unit = {
-  println(PseudobinSerde.SHORT.deserialize("     1"))
-  val str = PseudobinSerde.SHORT.serialize(1)
-  println(PseudobinSerde.SHORT.deserialize(str))
+  val messageStr = Message.serde.serialize(Message("hello", 1))
+  Message.serde.deserialize(messageStr) match {
+    case Success((value: Message, input: Input)) => println(value.toString + "\n" + input)
+    case Failure(e) => println(e)
+  }
 }
